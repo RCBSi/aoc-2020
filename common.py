@@ -11,18 +11,6 @@ def read_input(fp):
     return result.split('\n')
 
 
-def getchar():
-   """Returns a single character from standard input"""
-   import tty, termios, sys
-   fd = sys.stdin.fileno()
-   old_settings = termios.tcgetattr(fd)
-   try:
-      tty.setraw(sys.stdin.fileno())
-      ch = sys.stdin.read(1)
-   finally:
-      termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-   return ch
-
 def str_to_array(raw_in):
     as_list = [list(l) for l in raw_in]
     tmp = [list(map(ord, l)) for l in as_list]
