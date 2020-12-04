@@ -3,12 +3,11 @@ import numpy as np
 
 CHARS = {n: chr(n) for n in range(256)}
 
-def read_input(fp):
+def read_input(fp, split_delimiter='\n'):
     logging.info("Reading file: " + fp)
     with open(fp) as fh:
         result = fh.read()
-        
-    return result.split('\n')
+    return result.split(split_delimiter)
 
 
 def str_to_array(raw_in):
