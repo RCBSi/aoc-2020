@@ -11,8 +11,8 @@ def get_cleaned_input():
 if __name__ == "__main__":
     all_groups = get_cleaned_input()
 
-    get_n_uniques = lambda group: len(reduce(set.union, group))
-    get_n_intersected = lambda group: len(reduce(set.intersection, group))
+    get_n_uniques = lambda group: len(set.union(*group))
+    get_n_intersected = lambda group: len(set.intersection(*group))
 
     # Part 1
     answer_1 = sum(get_n_uniques(g) for g in all_groups)
