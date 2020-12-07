@@ -36,14 +36,13 @@ def create_ancestry_dict(rules):
     return d
 
 
-def get_unique_ancestors(rules, bag_name):
-    ancestors = create_ancestry_dict(rules)
+def get_unique_ancestors(ancestors, bag_name):
     if ancestors[bag_name] == set():
         return set()
     else:
         parents = ancestors[bag_name]
         further_ancestors = set.union(
-            *(get_unique_ancestors(rules, b) for b in ancestors[bag_name])
+            *(get_unique_ancestors(ancestors, b) for b in ancestors[bag_name])
         )
         return parents | further_ancestors
 
@@ -63,7 +62,8 @@ if __name__ == "__main__":
     rules = get_rules()
 
     # Part 1
-    unique_ancestors = get_unique_ancestors(rules, "shiny gold bag")
+    ancestors = create_ancestry_dict(rules)
+    unique_ancestors = get_unique_ancestors(ancestors, "shiny gold bag")
     print(f"Part 1 answer: {len(unique_ancestors)}")
 
     # Part 2
