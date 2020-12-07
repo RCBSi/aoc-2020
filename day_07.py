@@ -5,6 +5,16 @@ from functools import reduce
 from common import read_input
 
 
+class Bag:
+    def __init__(self, name):
+        self.name = name
+        self.parents = {}
+        self.children = {}
+
+    def __repr__(self):
+        return f"{self.name}"
+
+
 def parse_type_and_amount(c):
     as_list = c.split()
     amount = int(as_list[0])
@@ -22,16 +32,6 @@ def parse_rule(rule):
         contents = [b.strip() for b in contents_str.split(",")]
         d = {k: v for k, v in map(parse_type_and_amount, contents)}
     return (holder, d)
-
-
-class Bag:
-    def __init__(self, name):
-        self.name = name
-        self.parents = {}
-        self.children = {}
-
-    def __repr__(self):
-        return f"{self.name}"
 
 
 def get_bag_graph():
