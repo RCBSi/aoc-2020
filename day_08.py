@@ -96,17 +96,7 @@ def generate_possible_variations(program):
         yield p
 
 
-if __name__ == "__main__":
-    program = get_program()
-
-    computer = Computer()
-    computer.load_program(program)
-
-    # Part 1
-    computer.run()
-    print(f"Part 1 answer: {computer.acc}")
-
-    # Part 2
+def beat_it_until_it_works(computer, program):
     code_variations = generate_possible_variations(program)
 
     while True:
@@ -119,4 +109,19 @@ if __name__ == "__main__":
         if computer.finished_successfully:
             break
 
-    print(f"Part 2 answer: {computer.acc}")
+
+if __name__ == "__main__":
+    program = get_program()
+
+    computer = Computer()
+    computer.load_program(program)
+
+    # Part 1
+    computer.run()
+    answer_1 = computer.acc
+    print(f"Part 1 answer: {answer_1}")
+
+    # Part 2
+    beat_it_until_it_works(computer, program)
+    answer_2 = computer.acc
+    print(f"Part 2 answer: {answer_2}")
