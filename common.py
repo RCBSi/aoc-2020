@@ -42,7 +42,11 @@ def print_array(a, conversion = CHARS):
         print("".join(conversion.get(t, " ") for t in line))
 
 
-def chunked(l, n):
+def chunked(l, n, no_overlap=True):
     """Yield successive n-sized chunks from l."""
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
+    if no_overlap:
+        for i in range(0, len(l), n):
+            yield l[i:i + n]
+    else:
+        for i in range(0, len(l) - n):
+            yield l[i:i + n]
