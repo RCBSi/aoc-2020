@@ -85,7 +85,7 @@ class Ferry:
             if nxt != n_occupied:
                 n_occupied = nxt
             else:
-                print(f"Finished on iteration {i}")
+                # print(f"Finished on iteration {i}")
                 return n_occupied
 
 def solve(seatmap, use_complex_method):
@@ -98,12 +98,9 @@ if __name__ == "__main__":
     seatmap = str_to_array(get_cleaned_input())
 
     # Part 1
-    %time answer_1 = solve(seatmap, use_complex_method=False)
+    answer_1 = solve(seatmap, use_complex_method=False)
     print(f"Part 1 answer: {answer_1}")
 
     # Part 2
-    %time answer_2 = solve(seatmap, use_complex_method=True)
+    answer_2 = solve(seatmap, use_complex_method=True)
     print(f"Part 2 answer: {answer_2}")
-
-# 27 ms ± 7.55 ms
-# 32.9 ms ± 7.73 m
