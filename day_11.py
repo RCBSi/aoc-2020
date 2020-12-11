@@ -9,14 +9,10 @@ def get_cleaned_input():
     res = [x for x in read_input("data/day_11.txt")]
     return res
 
-def _get_seat_cells(seatmap):
-    return [c for c in zip(*np.where(seatmap==ord('L')))]
-
 class Ferry:
     def __init__(self, seatmap):
         self.area = seatmap.copy()
         self.max_i, self.max_j = seatmap.shape
-        self.seat_cells = _get_seat_cells(seatmap)
 
     def draw(self):
         print_array(self.area)
@@ -52,29 +48,35 @@ class Ferry:
                     break
         return neighbors
 
-    def _calculate_neighbors(self, cell, method):
+    def _neighbors_over_limit(self, cell, method, limit):
         cells = method(cell)
-        n_neighbors = sum(self.area[c] == ord("#") for c in cells)
-        return n_neighbors
+        s = 0
+        for c in cells:
+            if self.area[c] == ord("#"):
+                s += 1
+            if s > limit:
+                return True
+        return False
 
     def _step(self, use_complex_method):
         if use_complex_method:
             method = self._get_neighbors_complex
-            tolerance = 5
+            tolerance = 4
         else:
             method = self._get_neighbors_simple
-            tolerance = 4
+            tolerance = 3
 
         a = self.area.copy()
-        for seat in self.seat_cells:
-            n_neighbors = self._calculate_neighbors(seat, method)
+        for i in range(0, self.max_i):
+            for j in range(0, self.max_j):
+                seat = i, j
+                if self.area[seat] == ord("."):
+                    continue
+                elif (self.area[seat] == ord("L")) & ~self._neighbors_over_limit(seat, method, 0):
+                    a[seat] = ord("#")
+                elif (self.area[seat] == ord("#")) & self._neighbors_over_limit(seat, method, tolerance):
+                    a[seat] = ord("L")
 
-            if (self.area[seat] == ord("L")) & (n_neighbors == 0):
-                a[seat] = ord("#")
-            elif (self.area[seat] == ord("#")) & (n_neighbors >= tolerance):
-                a[seat] = ord("L")
-            else:
-                a[seat] = self.area[seat]
         self.area = a.copy()
 
     def simulate(self, use_complex_method):
