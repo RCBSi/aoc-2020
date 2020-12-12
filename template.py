@@ -1,21 +1,19 @@
 from common import read_input
 
-def get_cleaned_input():
-    res = [x for x in read_input("data/day_xx.txt")]
-    return res
+
+def solve_1(raw_in):
+    return False
 
 
-def solve():
-    return 1
+def solve_2(raw_in):
+    return False
 
 
 if __name__ == "__main__":
-    inputs = get_cleaned_input()
+    raw_in = read_input("data/day_xx.txt")
 
-    # Part 1
-    # answer_1 = solve(inputs)
-    # print(f"Part 1 answer: {answer_1}")
+    answer_1 = solve_1(raw_in)
+    answer_2 = solve_2(raw_in)
 
-    # Part 2
-    # answer_2 = solve(inputs)
-    # print(f"Part 2 answer: {answer_2}")
+    print(f"Part 1 answer: {answer_1}")
+    print(f"Part 2 answer: {answer_2}")

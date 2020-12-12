@@ -22,10 +22,8 @@ def parse_rule(rule):
     return (holder, d)
 
 
-def get_rules():
-    raw = [x for x in read_input("data/day_07.txt")]
-    d = dict(parse_rule(r) for r in raw)
-    return d
+def parse_rules(raw_in):
+    return dict(parse_rule(r) for r in raw_in)
 
 
 def create_ancestry_dict(rules):
@@ -36,13 +34,13 @@ def create_ancestry_dict(rules):
     return d
 
 
-def get_unique_ancestors(ancestors, bag_name):
-    if ancestors[bag_name] == set():
+def get_unique_ancestors(ancestry, bag_name):
+    if ancestry[bag_name] == set():
         return set()
     else:
-        parents = ancestors[bag_name]
+        parents = ancestry[bag_name]
         further_ancestors = set.union(
-            *(get_unique_ancestors(ancestors, b) for b in ancestors[bag_name])
+            *(get_unique_ancestors(ancestry, b) for b in ancestry[bag_name])
         )
         return parents | further_ancestors
 
@@ -59,13 +57,12 @@ def calculate_decendants(rules, bag_name):
 
 
 if __name__ == "__main__":
-    rules = get_rules()
+    raw_in =  read_input("data/day_07.txt")
+    rules = parse_rules(raw_in)
 
-    # Part 1
-    ancestors = create_ancestry_dict(rules)
-    unique_ancestors = get_unique_ancestors(ancestors, "shiny gold bag")
-    print(f"Part 1 answer: {len(unique_ancestors)}")
-
-    # Part 2
+    ancestry = create_ancestry_dict(rules)
+    unique_ancestors = get_unique_ancestors(ancestry, "shiny gold bag")
     answer_2 = calculate_decendants(rules, "shiny gold bag")
+
+    print(f"Part 1 answer: {len(unique_ancestors)}")
     print(f"Part 2 answer: {answer_2}")

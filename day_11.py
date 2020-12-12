@@ -5,9 +5,6 @@ from common import print_array, read_input, str_to_array
 
 import numpy as np
 
-def get_cleaned_input():
-    res = [x for x in read_input("data/day_11.txt")]
-    return res
 
 class Ferry:
     def __init__(self, seatmap):
@@ -97,12 +94,12 @@ def solve(seatmap, use_complex_method):
 
 
 if __name__ == "__main__":
-    seatmap = str_to_array(get_cleaned_input())
+    raw_in = read_input("data/day_11.txt")
+    seatmap = str_to_array(raw_in)
 
-    # Part 1
     answer_1 = solve(seatmap, use_complex_method=False)
-    print(f"Part 1 answer: {answer_1}")
-
-    # Part 2
     answer_2 = solve(seatmap, use_complex_method=True)
+
+    print(f"Part 1 answer: {answer_1}")
     print(f"Part 2 answer: {answer_2}")
+

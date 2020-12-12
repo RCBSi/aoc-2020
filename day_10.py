@@ -5,9 +5,8 @@ import numpy as np
 from common import read_input
 
 
-def get_ordered_joltages():
-    res = [int(x) for x in read_input("data/day_10.txt")]
-    s = sorted(res)
+def get_ordered_joltages(raw_in):
+    s = sorted(int(x) for x in raw_in)
     a = tuple([0] + s + [max(s) + 3])
     return a
 
@@ -24,22 +23,22 @@ def get_antecedent_idxes(adapter_idx, joltages):
 
 
 @lru_cache(maxsize=None)
-def get_n_paths(adapter_idx, joltages):
+def get_n_paths_to(adapter_idx, joltages):
     if adapter_idx == 0:
         return 1
     else:
         antecedent_idxs = get_antecedent_idxes(adapter_idx, joltages)
-        return sum(get_n_paths(a, joltages) for a in antecedent_idxs)
+        return sum(get_n_paths_to(a, joltages) for a in antecedent_idxs)
 
 
 if __name__ == "__main__":
-    joltages = tuple(get_ordered_joltages())
+    raw_in = read_input("data/day_10.txt")
+    joltages = get_ordered_joltages(raw_in)
 
-    # Part 1
     answer_1 = solve_1(joltages)
-    print(f"Part 1 answer: {answer_1}")
 
-    # Part 2
     max_adapter_idx = len(joltages) - 1
-    answer_2 = get_n_paths(max_adapter_idx, joltages)
+    answer_2 = get_n_paths_to(max_adapter_idx, joltages)
+
+    print(f"Part 1 answer: {answer_1}")
     print(f"Part 2 answer: {answer_2}")

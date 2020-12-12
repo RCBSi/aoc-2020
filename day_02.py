@@ -3,11 +3,6 @@ import numpy as np
 from common import read_input
 
 
-def get_cleaned_input():
-    res = [x for x in read_input("data/day_02.txt")]
-    return res
-
-
 def parse_line(line):
     policy, pw = line.split(": ")
     nums_raw, letter = policy.split(" ")
@@ -37,12 +32,10 @@ def sum_of_valids(password_list, func):
 
 
 if __name__ == "__main__":
-    password_list = get_cleaned_input()
+    password_list = read_input("data/day_02.txt")
 
-    # Part 1
     answer_1 = sum_of_valids(password_list, validate_simple)
-    print(f"Part 1 answer: {answer_1}")
-
-    # Part 2
     answer_2 = sum_of_valids(password_list, validate_complex)
+
+    print(f"Part 1 answer: {answer_1}")
     print(f"Part 2 answer: {answer_2}")

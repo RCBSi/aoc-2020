@@ -76,8 +76,5 @@ if __name__ == "__main__":
     have_all_fields = drop_passports_with_missing_fields(passports)
     valid_passports = drop_invalid_passports(passports)
 
-    # Part 1
     print(f"Part 1 answer: {len(have_all_fields)}")
-
-    # Part 2
     print(f"Part 2 answer: {len(valid_passports)}")

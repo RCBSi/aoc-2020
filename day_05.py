@@ -24,7 +24,7 @@ def get_sequences(bpass):
 
 def calculate_place(sequence, max_value):
     res = 0
-    halfway = max_value/2
+    halfway = max_value / 2
     for x in sequence:
         res += x * halfway
         halfway /= 2
@@ -59,10 +59,8 @@ def solve_2(passes):
 if __name__ == "__main__":
     passes = get_cleaned_input()
 
-    # Part 1
     answer_1 = solve_1(passes)
-    print(f"Part 1 answer: {answer_1}")
-
-    # Part 2
     answer_2 = solve_2(passes)
+
+    print(f"Part 1 answer: {answer_1}")
     print(f"Part 2 answer: {answer_2}")

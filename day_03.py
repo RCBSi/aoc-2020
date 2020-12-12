@@ -44,10 +44,8 @@ def solve_2(trees):
 if __name__ == "__main__":
     trees = get_cleaned_input()
 
-    # Part 1
     answer_1 = count_trees(trees, step_y=1, step_x=3)
-    print(f"Part 1 answer: {answer_1}")
-
-    # Part 2
     answer_2 = solve_2(trees)
+
+    print(f"Part 1 answer: {answer_1}")
     print(f"Part 2 answer: {answer_2}")
