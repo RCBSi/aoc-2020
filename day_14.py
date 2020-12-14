@@ -1,57 +1,47 @@
 from common import read_input
 
-def get_addresses(addr, mask):
+parse_addr = lambda cmd: f"{int(cmd[4:-1]):036b}"
+
+
+def get_address_variations(addr, mask):
     addresses = []
-    nbits = mask.count('X')
-    base = [bin(i)[2:].zfill(nbits) for i in range(0, 2**nbits )]
+    nbits = mask.count("X")
+    base = [bin(i)[2:].zfill(nbits) for i in range(0, 2 ** nbits)]
     for b in base:
         it = iter(b)
-        b_loc = "".join([a if m != 'X' else next(it) for a, m in zip(addr, mask)])
+        b_loc = "".join([a if m != "X" else next(it) for a, m in zip(addr, mask)])
         addresses.append(int(b_loc, 2))
     return addresses
 
-def solve_1(raw_in):
+
+def get_updates_simple(addr, value, mask):
+    transformed = "".join(m if m != "X" else a for a, m in zip(addr, mask))
+    return {addr: int(transformed, 2)}
+
+
+def get_updates_complex(addr, value, mask):
+    addr_masked = "".join(m if m == "1" else a for a, m in zip(addr, mask))
+    return {a: int(value) for a in get_address_variations(addr_masked, mask)}
+
+
+def solve(raw_in, get_updates_func):
     mem = {}
     for line in raw_in:
-        a,b = line.split(' = ')
-        if a == 'mask':
-            mask = b
+        cmd, value = line.split(" = ")
+        if cmd == "mask":
+            mask = value
         else:
-            loc = int(a[4:-1])
-            addr = f"{int(b):036b}"
-            transformed = "".join(m if m != 'X' else b for m, b in zip(mask, addr))
-            mem[loc] = transformed
-
-    return sum(int(v, 2) for v in mem.values())
-
-
-def solve_2(raw_in):
-    mem = {}
-    # ii = iter(raw_in)
-    for line in raw_in:
-        # line = next(ii)
-        a, b = line.split(' = ')
-        if a == 'mask':
-            mask = b
-            
-        else:
-            loc = int(a[4:-1])
-            addr = f"{int(loc):036b}"
-            addr_mod = "".join(m if m == "1" else a for a, m in zip(addr, mask))
-
-            mask_addresses = get_addresses(addr_mod, mask)
-            for a in mask_addresses:
-                mem[a] = int(b)
-
+            addr = parse_addr(cmd)
+            updates = get_updates_func(addr, value, mask)
+            mem.update(updates)
     return sum(v for v in mem.values())
-
 
 
 if __name__ == "__main__":
     raw_in = read_input("data/day_14.txt")
 
-    answer_1 = solve_1(raw_in)
-    answer_2 = solve_2(raw_in)
+    answer_1 = solve(raw_in, get_updates_simple)
+    answer_2 = solve(raw_in, get_updates_complex)
 
     print(f"Part 1 answer: {answer_1}")
     print(f"Part 2 answer: {answer_2}")
