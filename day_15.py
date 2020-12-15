@@ -30,7 +30,7 @@ if __name__ == "__main__":
     raw_in = [int(i) for i in read_input("data/day_15.txt", split_delimiter=',')]
 
     answer_1 = solve(raw_in, 2020)
-    # answer_2 = solve(raw_in, 100000)
+    %time answer_2 = solve(raw_in, 30000000)
 
     print(f"Part 1 answer: {answer_1}")
     print(f"Part 2 answer: {answer_2}")
