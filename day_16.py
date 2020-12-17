@@ -143,5 +143,3 @@ if __name__ == "__main__":
 
     print(f"Part 1 answer: {error_rate}")
     print(f"Part 2 answer: {answer_2}")
-
-    # Guessed 939191599769
