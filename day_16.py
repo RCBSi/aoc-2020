@@ -6,6 +6,7 @@ import numpy as np
 
 from common import read_input
 
+# TODO clean up
 
 def _range_to_set(rng):
     l, h = map(int, rng.split("-"))
@@ -42,54 +43,6 @@ def get_valid_tickets(rules, tickets):
 
     valids = set(tickets) - invalids
     return valids, invalids, error_rate
-
-
-# def get_valid_children(n, rules, valids):
-#     rule_names = list(rules.keys())
-#     possible_final = set(range(0, len(rules))) - set(n)
-#     potential = [tuple(list(n)+[x]) for x in possible_final]
-
-#     if not potential:
-#         return
-
-#     children = set()
-#     for p in potential:
-#         # print(f"Checking potential for {p}")
-#         rule_name = rule_names[p[-1]]
-#         # print(f"Rule name {rule_name}")
-#         if all([o[len(p)-1] in rules[rule_name] for o in valids]):
-#             # print(f"Appended {p}")
-#             children.add(p)
-#     # if len(children) == 0:
-#     #     print(f"No valid children for {n}")
-#     return list(children)
-
-
-# def is_final(n, rules):
-#     return len(n) == len(rules)
-
-# def dfs(rules, valids):
-#     stack = []
-#     visited = set()
-
-#     stack.extend(get_valid_children(tuple(), rules, valids))
-
-#     i = 0
-#     while len(stack) > 0:
-#         n = stack.pop()
-#         # print("............")
-#         # print(f"Looking at {n}")
-#         if n not in visited:
-#             visited.add(n)
-#             if is_final(n, rules):
-#                 # print("Found answer")
-#                 return n
-#             else:
-#                 children = get_valid_children(n, rules, valids)
-#                 stack.extend(children)
-#         i += 1
-#         if i%50000 == 0:
-#             print(f"On iteration {i}, stack size {len(stack)}, last checked {n}")
 
 
 def build_possibilities_dict(rules, valids):
