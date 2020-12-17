@@ -1,6 +1,6 @@
-from common import read_input
+from itertools import product
 
-import numpy as np
+from common import read_input
 
 
 def parse_coords(raw_in, ndim):
@@ -8,55 +8,26 @@ def parse_coords(raw_in, ndim):
     for i, l in enumerate(raw_in):
         for j, c in enumerate(l):
             if c == "#":
-                if ndim == 3:
-                    coords.add((i, j, 0))
-                elif ndim == 4:
-                    coords.add((i, j, 0, 0))
+                coords.add(tuple([i, j] + (ndim - 2) * [0]))
     return coords
 
 
-def get_neighbors(loc, ndim):
-    if ndim == 3:
-        x, y, z = loc
-        candidates = (
-            (x + a, y + b, z + c)
-            for a in (-1, 0, 1)
-            for b in (-1, 0, 1)
-            for c in (-1, 0, 1)
-        )
-    if ndim == 4:
-        x, y, z, w = loc
-        candidates = (
-            (x + a, y + b, z + c, w + d)
-            for a in (-1, 0, 1)
-            for b in (-1, 0, 1)
-            for c in (-1, 0, 1)
-            for d in (-1, 0, 1)
-        )
-
-    return set(c for c in candidates if c != loc)
-
-
-def count_occupied(coords):
-    return len(coords)
+def get_neighbors(coord):
+    self_included = set(product(*((x - 1, x, x + 1) for x in coord)))
+    return self_included - {coord}
 
 
 def update(coords, ndim):
     new = set()
 
-    # Check existing ones first
     for loc in coords:
-        n_neighbors = sum((n in coords) for n in get_neighbors(loc, ndim))
+        n_neighbors = sum((n in coords) for n in get_neighbors(loc))
         if n_neighbors in (2, 3):
             new.add(loc)
-        else:
-            if n_neighbors == 3:
-                new.add(loc)
 
-    # Then check their neighbors
-    possible = set.union(*(get_neighbors(x, ndim) for x in coords))
-    for loc in possible:
-        n_neighbors = sum((n in coords) for n in get_neighbors(loc, ndim))
+    neighboring = set.union(*(get_neighbors(x) for x in coords)) - coords
+    for loc in neighboring:
+        n_neighbors = sum((n in coords) for n in get_neighbors(loc))
         if n_neighbors == 3:
             new.add(loc)
 
@@ -68,8 +39,8 @@ def solve(raw_in, ndim, sim_length):
 
     for _ in range(sim_length):
         coords = update(coords, ndim)
-
-    return count_occupied(coords)
+        
+    return len(coords)
 
 
 if __name__ == "__main__":
