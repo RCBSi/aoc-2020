@@ -4,6 +4,8 @@ from itertools import count
 
 from queue import SimpleQueue
 
+# TODO Use Simplequeue to store histories instead
+
 def solve(raw_in, stop_at):
     ts_iter = count(1)
     history = defaultdict(list, {n: [next(ts_iter)] for n in raw_in})
