@@ -25,10 +25,13 @@ def unravel_regex(rules, idx="0", funny_mod=False):
 
             regexes = []
 
-            # MAX_LEN is hardcoded. The solution would not work if the inputs contained
+            # MAX_LEN is hardcoded below. The solution would not work if the inputs contained
             # longer sequences of regex_42 and regex_31... So this is an incomplete
             # solution. But how to make a regex that makes the amount of repetitions
-            # for these two patterns equal
+            # for these two patterns equal?
+            #
+            # A light-weight option that would be a complete solution would be to 
+            # check the inputs' max length and make MAX_LEN dynamically adjust to that. 
             MAX_LEN = 5
             for i in range(1, MAX_LEN):
                 fun_stuff = (
