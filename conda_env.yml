@@ -1,4 +1,4 @@
-name: aoc-2020-env
+name: aoc-env
 channels:
   - defaults
 dependencies:
