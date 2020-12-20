@@ -6,12 +6,7 @@ import numpy as np
 
 from common import array_to_string, read_input, str_to_array
 
-OPPOSITE_HDG = {
-    'n': 's',
-    'e': 'w',
-    's': 'n',
-    'w': 'e'
-}
+OPPOSITE_HDG = {"n": "s", "e": "w", "s": "n", "w": "e"}
 
 
 class Tile:
@@ -27,7 +22,6 @@ class Tile:
 
     def flip(self):
         self.arr = np.flip(self.arr, axis=1)
-
 
     def get_edges(self):
         return {
@@ -50,40 +44,6 @@ def create_tiles_dict(raw_in):
     return tiles_dict
 
 
-def find_match(tile, hdg, tiles_dict):
-    opp_hdg = OPPOSITE_HDG[hdg]
-    for other in tiles_dict.values():
-        if tile == other:
-            continue
-        for _ in range(2):
-            for _ in range(4):
-                if tile.get_edges()[hdg] == other.get_edges()[opp_hdg]:
-                    return other
-                other.rotate()
-            other.flip()
-    # print("Match not found!")
-            
-
-def piece_together(tiles_dict, corner_tiles):
-    hdg_iter = cycle(['e', 's', 'w', 'n'])
-    hdg = next(hdg_iter)
-    # Start from one corner and rotate it so that it is the NW one
-    tile = tiles_dict[corner_tiles[0]]
-    del(tiles_dict[tile.id])
-    
-    while tiles_dict:
-        nxt = find_match(tile, hdg, tiles_dict)
-        if nxt:
-            print(f"Found next tile {tile.id}")
-            tile = nxt
-            del(tiles_dict[tile.id])
-            
-        if not nxt:
-            print("Direction finished, changing dir")
-            hdg = next(hdg_iter)
-
-
-
 def get_corner_tiles(tiles_dict):
     # TODO Clean up
     tiles = list(tiles_dict.values())
@@ -101,6 +61,56 @@ def get_corner_tiles(tiles_dict):
             corner_pieces.append(t.id)
 
     return corner_pieces
+
+
+def find_match(tile, hdg, unsolved_tiles, tiles_dict):
+    opp_hdg = OPPOSITE_HDG[hdg]
+    for tile_id in unsolved_tiles:
+        other = tiles_dict[tile_id]
+        if tile == other:
+            print("We have a BIG BUG")
+        for _ in range(2):
+            for _ in range(4):
+                if tile.get_edges()[hdg] == other.get_edges()[opp_hdg]:
+                    return other
+                other.rotate()
+            other.flip()
+
+
+def piece_together(tiles_dict, corner_tiles):
+    # Resources
+    LOC_OFFSET = {
+        "n": np.array([1, 0]),
+        "e": np.array([0, 1]),
+        "s": np.array([-1, 0]),
+        "w": np.array([0, -1]),
+    }
+    hdg_iter = cycle(["e", "s", "w", "n"])
+
+    # Init
+    unsolved_tiles = set(tiles_dict)
+    solution = {}
+    loc = np.array([0, 0])
+    hdg = next(hdg_iter)
+    tile = tiles_dict[corner_tiles[0]]
+    unsolved_tiles.remove(tile.id)
+
+    # Loop and build the solution dict
+    while unsolved_tiles:
+        solution[tuple(loc)] = tile
+        match = find_match(tile, hdg, unsolved_tiles, tiles_dict)
+        if match:
+            print(f"Found next tile {match.id}")
+            tile = match
+            unsolved_tiles.remove(tile.id)
+            loc += LOC_OFFSET[hdg]
+
+        if not match:
+            print("Direction finished, changing dir")
+            hdg = next(hdg_iter)
+    solution[tuple(loc)] = tile
+
+    # Transform solution dict into a big tile
 
 
 def solve_2(raw_in):
