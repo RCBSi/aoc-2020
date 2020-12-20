@@ -10,12 +10,6 @@ def read_input(fp, split_delimiter='\n'):
     return result.split(split_delimiter)
 
 
-def str_to_array(raw_in):
-    as_list = [list(l) for l in raw_in]
-    tmp = [list(map(ord, l)) for l in as_list]
-    return np.array(tmp)
-
-
 def coords_to_array(coords):
     """Makes a np array out of coodinates"""
     # Shift coords to avoid negatives
@@ -34,12 +28,23 @@ def coords_to_array(coords):
 
     return a
 
-def print_array(a, conversion = CHARS):
-    """Prints a np array to the screen"""
+def str_to_array(raw_in):
+    """Transforms a string representation of an 
+    ascii coord array into a np array"""
+    as_list = [list(l) for l in raw_in]
+    tmp = [list(map(ord, l)) for l in as_list]
+    return np.array(tmp)
+
+
+def array_to_string(a, conversion = CHARS):
+    """Transforms ascii coord array to a string representation"""
     # conversion = {-1: "░", 0:"▓", 1: " ", 2:"€", 3:"@", 4:"S"}
-    l = a.tolist()
-    for line in l:
-        print("".join(conversion.get(t, " ") for t in line))
+    return "\n".join("".join(conversion.get(t, " ") for t in line) for line in a.tolist())
+
+
+def print_array(a, conversion = CHARS):
+    """Prints an ascii array to the screen"""
+    print(array_to_string(a, conversion))
 
 
 def chunked(l, n, no_overlap=True):
