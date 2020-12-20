@@ -80,9 +80,9 @@ def find_match(tile, hdg, unsolved_tiles, tiles_dict):
 def piece_together(tiles_dict, corner_tiles):
     # Resources
     LOC_OFFSET = {
-        "n": np.array([1, 0]),
+        "n": np.array([-1, 0]),
         "e": np.array([0, 1]),
-        "s": np.array([-1, 0]),
+        "s": np.array([1, 0]),
         "w": np.array([0, -1]),
     }
     hdg_iter = cycle(["e", "s", "w", "n"])
@@ -100,20 +100,36 @@ def piece_together(tiles_dict, corner_tiles):
         solution[tuple(loc)] = tile
         match = find_match(tile, hdg, unsolved_tiles, tiles_dict)
         if match:
-            print(f"Found next tile {match.id}")
+            # print(f"Found next tile {match.id}")
             tile = match
             unsolved_tiles.remove(tile.id)
             loc += LOC_OFFSET[hdg]
 
         if not match:
-            print("Direction finished, changing dir")
+            # print("Direction finished, changing dir")
             hdg = next(hdg_iter)
     solution[tuple(loc)] = tile
 
     # Transform solution dict into a big tile
+    row_idxes, col_idxes = zip(*solution.keys())
+    row_min, row_max = min(row_idxes), max(row_idxes)
+    col_min, col_max = min(col_idxes), max(col_idxes)
+    rows = []
+    for col in range(col_min, col_max +1):
+        rows.append(np.concatenate([solution[(row, col)].arr[1:-1, 1:-1] for row in range(row_min, row_max +1) ], axis=0))
+    final = np.concatenate(rows, axis=1)
+
+    return Tile("FINALE", final)
 
 
-def solve_2(raw_in):
+def solve_2(tiles_dict, corner_tiles):
+    final = piece_together(tiles_dict, corner_tiles)
+
+    # final.flip()
+    # final.rotate()
+    # final.rotate()
+
+
     return False
 
 
@@ -122,7 +138,7 @@ if __name__ == "__main__":
     tiles_dict = create_tiles_dict(raw_in)
 
     corner_tiles = get_corner_tiles(tiles_dict)
-    answer_2 = solve_2(raw_in)
+    # answer_2 = solve_2(raw_in)
 
     print(f"Part 1 answer: {reduce(mul, corner_tiles)}")
-    print(f"Part 2 answer: {answer_2}")
+    # print(f"Part 2 answer: {answer_2}")
