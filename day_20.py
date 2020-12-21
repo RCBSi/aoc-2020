@@ -115,21 +115,53 @@ def piece_together(tiles_dict, corner_tiles):
     row_min, row_max = min(row_idxes), max(row_idxes)
     col_min, col_max = min(col_idxes), max(col_idxes)
     rows = []
-    for col in range(col_min, col_max +1):
-        rows.append(np.concatenate([solution[(row, col)].arr[1:-1, 1:-1] for row in range(row_min, row_max +1) ], axis=0))
+    for col in range(col_min, col_max + 1):
+        rows.append(
+            np.concatenate(
+                [
+                    solution[(row, col)].arr[1:-1, 1:-1]
+                    for row in range(row_min, row_max + 1)
+                ],
+                axis=0,
+            )
+        )
     final = np.concatenate(rows, axis=1)
 
     return Tile("FINALE", final)
 
 
+def get_roughness(array):
+    serpent_ascii = [
+        "                  # ",
+        "#    ##    ##    ###",
+        " #  #  #  #  #  #   ",
+    ]
+    serpent_filter = (str_to_array(serpent_ascii) == ord("#")).astype(int)
+    serpent_y_len, serpent_x_len = serpent_filter.shape
+
+    hashes = (array == ord("#")).astype(int)
+
+    solution = np.zeros_like(hashes)
+    max_y, max_x = solution.shape
+    for row in range(0, max_y-serpent_y_len+1):
+        for col in range(0, max_x-serpent_x_len+1):
+            # print(row,col)
+            original = hashes[row:row+serpent_y_len, col:col+serpent_x_len]
+            filtered = original * serpent_filter
+            solution[row:row+serpent_y_len, col:col+serpent_x_len] += filtered
+
+    
+
+
 def solve_2(tiles_dict, corner_tiles):
     final = piece_together(tiles_dict, corner_tiles)
 
-    #TODO Can remove after solution works
+    # TODO Can remove after solution works
     final.rotate()
     final.rotate()
     final.rotate()
 
+    array = final.arr
 
     return False
 
