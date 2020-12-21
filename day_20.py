@@ -145,25 +145,26 @@ def get_roughness(array):
     max_y, max_x = solution.shape
     for row in range(0, max_y-serpent_y_len+1):
         for col in range(0, max_x-serpent_x_len+1):
-            # print(row,col)
             original = hashes[row:row+serpent_y_len, col:col+serpent_x_len]
             filtered = original * serpent_filter
-            solution[row:row+serpent_y_len, col:col+serpent_x_len] += filtered
-
+            if np.array_equal(filtered, serpent_filter):
+                solution[row:row+serpent_y_len, col:col+serpent_x_len] += filtered
     
-
+    roughness = np.sum((solution == 0) * hashes)
+    return roughness
 
 def solve_2(tiles_dict, corner_tiles):
     final = piece_together(tiles_dict, corner_tiles)
 
-    # TODO Can remove after solution works
-    final.rotate()
-    final.rotate()
-    final.rotate()
+    roughnesses = []
+    for _ in range(2):
+        final.flip()
+        for _ in range(4):
+            final.rotate()
+            r = get_roughness(final.arr)
+            roughnesses.append(r)
 
-    array = final.arr
-
-    return False
+    return min(roughnesses)
 
 
 if __name__ == "__main__":
@@ -171,7 +172,7 @@ if __name__ == "__main__":
     tiles_dict = create_tiles_dict(raw_in)
 
     corner_tiles = get_corner_tiles(tiles_dict)
-    # answer_2 = solve_2(raw_in)
+    answer_2 = solve_2(tiles_dict, corner_tiles)
 
     print(f"Part 1 answer: {reduce(mul, corner_tiles)}")
-    # print(f"Part 2 answer: {answer_2}")
+    print(f"Part 2 answer: {answer_2}")
