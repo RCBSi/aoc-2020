@@ -33,7 +33,6 @@ def solve(foods):
     solution = {}
 
     while any(len(x[1]) > 0 for x in unsolved):
-        # Update lookups
         updates = []
         ingt_holders, allg_holders = _build_lookups(unsolved)
 
