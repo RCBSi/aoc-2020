@@ -125,9 +125,10 @@ def piece_together(tiles_dict, corner_tiles):
 def solve_2(tiles_dict, corner_tiles):
     final = piece_together(tiles_dict, corner_tiles)
 
-    # final.flip()
-    # final.rotate()
-    # final.rotate()
+    #TODO Can remove after solution works
+    final.rotate()
+    final.rotate()
+    final.rotate()
 
 
     return False
