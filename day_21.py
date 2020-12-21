@@ -1,6 +1,5 @@
 from collections import defaultdict
 from copy import deepcopy
-from itertools import combinations
 
 from common import read_input
 
@@ -40,27 +39,16 @@ def solve(foods):
 
         # Check if common ingredients
         interesting_allgs = [a for a, hs in allg_holders.items() if len(hs) >= 2]
-        if interesting_allgs:
-            for allg in interesting_allgs:
-                holders = allg_holders[allg]
-                common_ingts = set.intersection(*(unsolved[f][0] for f in holders))
-                common_allgs = set.intersection(*(unsolved[f][1] for f in holders))
-                if len(common_allgs) == len(common_ingts) == 1:
-                    # print("Found a certainty")
-                    updates.append((common_ingts.pop(), common_allgs.pop()))
-
-        # Mark certainties
-        certainties = [f for f in unsolved if (len(f[0]) == len(f[1]) == 1)]
-        if certainties:
-            for f in certainties:
-                # print("Found a certainty")
-                t = list(f[0])[0], list(f[1])[0]
-                updates.append(t)
+        for allg in interesting_allgs:
+            holders = allg_holders[allg]
+            common_ingts = set.intersection(*(unsolved[f][0] for f in holders))
+            common_allgs = set.intersection(*(unsolved[f][1] for f in holders))
+            if len(common_allgs) == len(common_ingts) == 1:
+                updates.append((common_ingts.pop(), common_allgs.pop()))
 
         # Update found solutions
-        solution.update(updates)
-        for upd in updates:
-            ingt, allg = upd
+        for ingt, allg in updates:
+            solution[ingt] = allg
             for f in ingt_holders[ingt]:
                 unsolved[f][0].remove(ingt)
             for f in allg_holders[allg]:
