@@ -45,13 +45,13 @@ def get_unique_ancestors(ancestry, bag_name):
         return parents | further_ancestors
 
 
-def calculate_decendants(rules, bag_name):
+def calculate_descendants(rules, bag_name):
     if rules[bag_name] == {}:
         return 0
     else:
         n_children = sum(v for v in rules[bag_name].values())
         n_further_descendants = sum(
-            v * calculate_decendants(rules, k) for k, v in rules[bag_name].items()
+            v * calculate_descendants(rules, k) for k, v in rules[bag_name].items()
         )
         return n_children + n_further_descendants
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     ancestry = create_ancestry_dict(rules)
     unique_ancestors = get_unique_ancestors(ancestry, "shiny gold bag")
-    answer_2 = calculate_decendants(rules, "shiny gold bag")
+    answer_2 = calculate_descendants(rules, "shiny gold bag")
 
     print(f"Part 1 answer: {len(unique_ancestors)}")
     print(f"Part 2 answer: {answer_2}")
