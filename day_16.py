@@ -58,7 +58,7 @@ def build_possibilities_dict(rules, valids):
     return possibilities
 
 
-def max_flow_solver(possibilities):
+def max_flow_solve(possibilities):
     G = nx.DiGraph()
 
     all_m = set(possibilities.keys())
@@ -78,7 +78,7 @@ def max_flow_solver(possibilities):
 
 def solve_2(rules, mine, valids):
     possibilities = build_possibilities_dict(rules, valids)
-    solution = max_flow_solver(possibilities)
+    solution = max_flow_solve(possibilities)
     idxes = [v for k, v in solution.items() if k.startswith("departure")]
     return reduce(mul,[mine[i] for i in idxes])
 
