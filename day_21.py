@@ -45,6 +45,11 @@ def solve(foods):
             if len(common_allgs) == len(common_ingts) == 1:
                 updates.append((common_ingts.pop(), common_allgs.pop()))
 
+        # Check certainties
+        for f in unsolved:
+            if len(f[0]) == len(f[1]) == 1:
+                updates.append(tuple(list(x)[0] for x in f))
+
         # Update found solutions
         for ingt, allg in updates:
             solution[ingt] = allg
