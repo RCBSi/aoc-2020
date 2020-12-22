@@ -34,7 +34,7 @@ def parse_input(raw_in):
 def get_valid_tickets(rules, tickets):
     invalids = set()
     error_rate = 0
-    
+
     for ticket in tickets:
         for n in ticket:
             if all([(n not in vs) for vs in rules.values()]):
@@ -61,19 +61,19 @@ def build_possibilities_dict(rules, valids):
 def max_flow_solver(possibilities):
     G = nx.DiGraph()
 
-    all_a = set(possibilities.keys())
-    all_b = set.union(*(s for s in possibilities.values()))
+    all_m = set(possibilities.keys())
+    all_n = set.union(*(s for s in possibilities.values()))
 
-    for ig in all_a:
-        G.add_edge('source', ig, capacity=1.0)
-    for alg in all_b:
-        G.add_edge(alg, 'sink', capacity=1.0)
-    for a, b_s in possibilities.items():
-        for b in b_s:
-            G.add_edge(a, b, capacity=1.0)
+    for m in all_m:
+        G.add_edge('source', m, capacity=1.0)
+    for n in all_n:
+        G.add_edge(n, 'sink', capacity=1.0)
+    for m, n_ in possibilities.items():
+        for n in n_:
+            G.add_edge(m, n, capacity=1.0)
 
     _, flow_dict = nx.maximum_flow(G, "source", "sink")
-    return {k: max(v, key=v.get) for k, v in flow_dict.items() if k in all_a}
+    return {k: max(v, key=v.get) for k, v in flow_dict.items() if k in all_m}
 
 
 def solve_2(rules, mine, valids):
