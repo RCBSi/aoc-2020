@@ -18,8 +18,24 @@ def solve_1(decks):
     return score
 
 
-def solve_2(raw_in):
-    return False
+
+def play_game(decks):
+    # history = set()
+    while (len(decks[0]) > 0) & (len(decks[1]) > 0):
+        a, a_ = decks[0][0], decks[0][1:]
+        b, b_ = decks[1][0], decks[1][1:]
+        if (len(a_) < a) | (len(b_) < b):
+            round_winner = 0 if (a>b) else 1
+        else:
+            _, round_winner = play_game([a_[:a], b_[:b]])
+        decks = [a_ + [a, b], b_] if (round_winner == 0) else [a_, b_ + [b, a]]
+    game_winner = 0 if len(decks[1]) == 0 else 1
+    return decks, game_winner
+
+def solve_2(decks):
+    decks, winner = play_game(decks)
+    score = sum(m * c for m, c in zip(count(1), decks[winner][::-1]))
+    return score
 
 
 if __name__ == "__main__":
@@ -27,7 +43,7 @@ if __name__ == "__main__":
     decks = parse_input(raw_in)
 
     answer_1 = solve_1(decks)
-    answer_2 = solve_2(raw_in)
+    # answer_2 = solve_2(decks)
 
     print(f"Part 1 answer: {answer_1}")
-    print(f"Part 2 answer: {answer_2}")
+    # print(f"Part 2 answer: {answer_2}")
