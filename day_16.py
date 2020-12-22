@@ -3,10 +3,10 @@ from functools import reduce
 from operator import mul
 
 import numpy as np
+import networkx as nx
 
 from common import read_input
 
-# TODO clean up
 
 def _range_to_set(rng):
     l, h = map(int, rng.split("-"))
@@ -34,10 +34,10 @@ def parse_input(raw_in):
 def get_valid_tickets(rules, tickets):
     invalids = set()
     error_rate = 0
+    
     for ticket in tickets:
         for n in ticket:
             if all([(n not in vs) for vs in rules.values()]):
-                # print(n, " is not valid")
                 error_rate += n
                 invalids.add(ticket)
 
@@ -58,32 +58,28 @@ def build_possibilities_dict(rules, valids):
     return possibilities
 
 
-def eliminate(possibilities):
-    pdict = deepcopy(possibilities)
-    solved = {}
-    # Collect stuff to be eliminated
-    while True:
-        remove_keys = set()
-        remove_values = set()
-        for r, ps in pdict.items():
-            if len(ps) == 1:
-                solved[r] = sum(ps)
-                remove_keys.add(r)
-                remove_values |= ps
-        if len(remove_keys) + len(remove_values) == 0:
-            break
-        # Remove
-        pdict = {
-            k: (v - remove_values) for k, v in pdict.items() if k not in remove_keys
-        }
-    return solved
+def max_flow_solver(possibilities):
+    G = nx.DiGraph()
+
+    all_a = set(possibilities.keys())
+    all_b = set.union(*(s for s in possibilities.values()))
+
+    for ig in all_a:
+        G.add_edge('source', ig, capacity=1.0)
+    for alg in all_b:
+        G.add_edge(alg, 'sink', capacity=1.0)
+    for a, b_s in possibilities.items():
+        for b in b_s:
+            G.add_edge(a, b, capacity=1.0)
+
+    _, flow_dict = nx.maximum_flow(G, "source", "sink")
+    return {k: max(v, key=v.get) for k, v in flow_dict.items() if k in all_a}
 
 
 def solve_2(rules, mine, valids):
     possibilities = build_possibilities_dict(rules, valids)
-    solved = eliminate(possibilities)
-    idxes = [v for k, v in solved.items() if k.startswith("departure")]
-    
+    solution = max_flow_solver(possibilities)
+    idxes = [v for k, v in solution.items() if k.startswith("departure")]
     return reduce(mul,[mine[i] for i in idxes])
 
 
