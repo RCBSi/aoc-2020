@@ -17,15 +17,17 @@ class LinkedCircle:
         self._set_values(values)
 
     def _set_values(self, iterable):
-        first_value = iterable[0]
+        _iter = iter(iterable)
+        
+        first_value = next(_iter)
         first_node = CircleNode(first_value)
         self.nodes = {first_value: first_node}
         self.cursor = first_node
 
-        for i in iterable[1:]:
+        for i in _iter:
             self._push(i)
 
-        self.nodes[iterable[-1]].next = self.nodes[iterable[0]]  # Wrap to circle
+        self.nodes[i].next = first_node  # Wrap to circle
         self.cursor = first_node
         self.max_value = max(self.nodes)
 
@@ -77,9 +79,8 @@ class LinkedCircle:
         return f"LinkedCircle with {len(self.nodes)} nodes. Cursor is at {self.cursor}"
 
 
-def solve_1(raw_in):
-    inputs = [int(i) for i in raw_in[0]]
 
+def solve_1(inputs):
     cups = LinkedCircle(inputs)
     cups.move(100)
 
@@ -87,12 +88,11 @@ def solve_1(raw_in):
     return "".join(str(i) for i in cups.peek(8))
 
 
-def solve_2(raw_in):
+def solve_2(inputs):
     MAX_VALUE = 1_000_000
-    max_input = int(max(list(raw_in[0])))
-    inputs = chain([int(i) for i in raw_in[0]], range(max_input + 1, MAX_VALUE + 1))
+    _inputs = chain(inputs, range(max(inputs) + 1, MAX_VALUE + 1))
 
-    cups = LinkedCircle([i for i in inputs])
+    cups = LinkedCircle(_inputs)
     cups.move(10_000_000)
 
     cups.set_cursor(1)
@@ -102,9 +102,10 @@ def solve_2(raw_in):
 
 if __name__ == "__main__":
     raw_in = read_input("data/day_23.txt")
+    inputs = [int(i) for i in raw_in[0]]
 
-    answer_1 = solve_1(raw_in)
-    answer_2 = solve_2(raw_in)
+    answer_1 = solve_1(inputs)
+    # answer_2 = solve_2(inputs)
 
     print(f"Part 1 answer: {answer_1}")
-    print(f"Part 2 answer: {answer_2}")
+    # print(f"Part 2 answer: {answer_2}")
