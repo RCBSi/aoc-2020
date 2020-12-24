@@ -1,6 +1,6 @@
-from common import read_input
-
 import re
+
+from common import read_input
 
 COORDS = {
     "e": (0, 2),
@@ -13,14 +13,14 @@ COORDS = {
 
 
 def parse_instructions(raw_in):
-    parse_line = lambda line: [x for x in re.findall(r'(e|se|sw|w|nw|ne)', line)]
+    parse_line = lambda line: [x for x in re.findall(r"(e|se|sw|w|nw|ne)", line)]
     return [parse_line(line) for line in raw_in]
 
 
 def create_floor(instructions):
     floor = set()
     for path in instructions:
-        x, y = (0,0)
+        x, y = (0, 0)
         for c in path:
             dx, dy = COORDS[c]
             x += dx
@@ -31,10 +31,11 @@ def create_floor(instructions):
             floor.add((x, y))
     return floor
 
+
 def _get_neighbors(loc):
     x, y = loc
-    return set((x+dx, y+dy) for dx, dy in COORDS.values())
-    
+    return set((x + dx, y + dy) for dx, dy in COORDS.values())
+
 
 def _update(floor):
     new = set()
@@ -51,7 +52,6 @@ def _update(floor):
             new.add(loc)
 
     return new
-
 
 
 def solve_2(floor):
